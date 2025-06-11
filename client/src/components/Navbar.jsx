@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { loadFull } from 'tsparticles';
+import { AuthContext } from '../context/AuthContext';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
   const [isSticky, setIsSticky] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const particlesContainer = useRef(null);
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   // Handle sticky navbar on scroll
   useEffect(() => {
@@ -96,18 +98,12 @@ const Navbar = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Toggle dropdown
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
+    navigate('/auth');
   };
-
-  // Categories for dropdown
-  const categories = [
-    { id: 1, name: 'Electronics', path: '/shop/electronics' },
-    { id: 2, name: 'Fashion', path: '/shop/fashion' },
-    { id: 3, name: 'Home & Kitchen', path: '/shop/home-kitchen' },
-    { id: 4, name: 'Beauty', path: '/shop/beauty' },
-  ];
 
   return (
     <nav className={`${styles.navbar} ${isSticky ? styles.sticky : ''}`}>
@@ -139,40 +135,17 @@ const Navbar = () => {
               Home
             </NavLink>
           </li>
-
-          {/* Shop with Dropdown */}
-          <li className={styles.dropdown}>
-            <div
-              className={styles.navLink}
-              onClick={toggleDropdown}
-              onMouseEnter={() => setIsDropdownOpen(true)}
-              onMouseLeave={() => setIsDropdownOpen(false)}
+          <li>
+            <NavLink
+              to="/shop"
+              className={({ isActive }) =>
+                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+              }
+              onClick={() => setIsMobileMenuOpen(false)}
             >
               Shop
-              <span className={styles.dropdownArrow}>▼</span>
-            </div>
-            <ul
-              className={`${styles.dropdownMenu} ${isDropdownOpen ? styles.dropdownOpen : ''}`}
-              onMouseEnter={() => setIsDropdownOpen(true)}
-              onMouseLeave={() => setIsDropdownOpen(false)}
-            >
-              {categories.map((category) => (
-                <li key={category.id}>
-                  <Link
-                    to={category.path}
-                    className={styles.dropdownItem}
-                    onClick={() => {
-                      setIsDropdownOpen(false);
-                      setIsMobileMenuOpen(false);
-                    }}
-                  >
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            </NavLink>
           </li>
-
           <li>
             <NavLink
               to="/blog"
@@ -195,17 +168,33 @@ const Navbar = () => {
               About
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="/login"
-              className={({ isActive }) =>
-                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
-              }
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Login/Sign Up
-            </NavLink>
-          </li>
+          {user && user.username ? (
+            <>
+              <li className={styles.userGreeting}>
+                Hello, {user.username}
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className={styles.logoutButton}
+                >
+                  Logout
+                </button>
+              </li>
+            </>
+          ) : (
+            <li>
+              <NavLink
+                to="/auth"
+                className={({ isActive }) =>
+                  isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+                }
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Login/Sign Up
+              </NavLink>
+            </li>
+          )}
         </ul>
       </div>
     </nav>

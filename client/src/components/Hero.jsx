@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as THREE from 'three';
 import { motion } from 'framer-motion';
 import { io } from 'socket.io-client';
+import { Link } from 'react-router-dom';
 import styles from './Hero.module.css';
 
 const Hero = () => {
@@ -73,12 +74,12 @@ const Hero = () => {
           Discover Smarter. Shop Faster. Save More.
         </motion.h1>
         <div className={styles.ctaContainer}>
-          <a href="#shop" className={styles.ctaButton}>
+          <Link to="/shop" className={styles.ctaButton}>
             Explore Products
-          </a>
-          <a href="#blog" className={styles.ctaButton}>
+          </Link>
+          <Link to="/deals-reviews" className={styles.ctaButton}>
             Read Deals & Reviews
-          </a>
+          </Link>
         </div>
       </div>
       <div className={styles.badge}>

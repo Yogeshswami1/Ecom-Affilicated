@@ -38,7 +38,7 @@
   display: flex;
   justify-content: center;
   gap: 2rem;
-  flex-wrap: wrap;
+  flex-wrap: wrap; /* Default for desktop: cards will wrap */
 }
 
 .metricCard {
@@ -67,4 +67,50 @@
 .metricTitle {
   font-size: 1rem;
   color: #4b5563;
+}
+
+@media (max-width: 1024px) {
+  .whyChooseUs .content .metricsContainer {
+    display: flex !important;
+    flex-wrap: nowrap !important; /* Prevent wrapping on mobile */
+    overflow-x: auto !important; /* Enable horizontal scrolling */
+    justify-content: flex-start !important; /* Align cards to the start */
+    padding: 0 1rem !important; /* Add padding for better spacing */
+    scroll-behavior: smooth !important; /* Smooth scrolling */
+    -webkit-overflow-scrolling: touch !important; /* Smooth scrolling on iOS */
+  }
+
+  .whyChooseUs .content .metricsContainer::-webkit-scrollbar {
+    display: none !important; /* Hide scrollbar on Webkit browsers (Chrome, Safari) */
+  }
+
+  .whyChooseUs .content .metricsContainer {
+    -ms-overflow-style: none !important; /* Hide scrollbar on Edge */
+    scrollbar-width: none !important; /* Hide scrollbar on Firefox */
+  }
+
+  .metricCard {
+    flex: 0 0 180px !important; /* Fixed width for mobile cards */
+    min-width: 180px !important; /* Ensure cards don't shrink */
+  }
+
+  .title {
+    font-size: 2rem; /* Slightly smaller title on mobile */
+  }
+
+  .subtitle {
+    font-size: 1rem; /* Slightly smaller subtitle on mobile */
+  }
+
+  .icon {
+    font-size: 2rem; /* Slightly smaller icon on mobile */
+  }
+
+  .metricValue {
+    font-size: 1.75rem; /* Slightly smaller metric value on mobile */
+  }
+
+  .metricTitle {
+    font-size: 0.9rem; /* Slightly smaller metric title on mobile */
+  }
 }
